@@ -1,4 +1,4 @@
-with open('/Users/amieeverett/Sites/advent-of-code-2020/challenge1/input.txt') as f:
+with open('/Users/amieeverett/Sites/advent-of-code-2020/day1/input.txt') as f:
     expenses = [int(i.strip()) for i in f.readlines()]
 print(expenses)
 
