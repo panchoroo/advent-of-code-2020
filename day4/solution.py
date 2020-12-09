@@ -39,9 +39,6 @@ for row in rows:
     if(row == ""):
         if(checkPassport(passPortData)):
             numberOfValidPassports += 1
-        else:
-            print("passPortData", passPortData)
-            print("✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨")
         passPortData = setBlankPassport()
         print("------------------------------------------------------------")
     else:
@@ -50,11 +47,9 @@ for row in rows:
             index = item.split(":")[0]
             if(index in passPortData.keys()):
                 passPortData[index] = True
-            # elif(index == 'cid'):
-            #     passPortData['pid'] = True
-                # treat CID and PID as interchangeable, this gave 218 as the answer
 
 print("numberOfValidPassports", numberOfValidPassports)
 # 215 is too low
 # 218 is too high
 # 216 is the answer, but why?
+# because the way this works it needs 2 blank lines after the last input or it won't fully process the last one
