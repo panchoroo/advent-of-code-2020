@@ -21,16 +21,23 @@ def findSeatID(rowNum, columnNum):
     # Every seat also has a unique seat ID: multiply the row by 8, then add the column. In this example, the seat has ID 44 * 8 + 5 = 357.
     return (rowNum*8) + columnNum
 
+lowestSeatID=1000
 highestSeatID=0
+seatIDs=[]
 for row in rows:
     rowNumber = findRow(row[:-3])
     columnNumber = findColumn(row[-3:])
     seatID = findSeatID(rowNumber, columnNumber)
+
     if seatID > highestSeatID:
         highestSeatID = seatID
-    # print (findSeatID(rowNumber, columnNumber))
-    # print ('------------------------')
+    if seatID < lowestSeatID:
+        lowestSeatID = seatID
+    seatIDs.append(seatID)
 
-# As a sanity check, look through your list of boarding passes. 
-# What is the highest seat ID on a boarding pass?
+print('lowestSeatID = ', lowestSeatID)
 print('highestSeatID = ', highestSeatID)
+
+for i in range(lowestSeatID, highestSeatID):
+    if i not in seatIDs:
+        print('This number is missing:', i)
