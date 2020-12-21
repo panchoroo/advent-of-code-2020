@@ -5,14 +5,24 @@ with open("/Users/amieeverett/Sites/advent-of-code-2020/day11/"+file+".txt") as 
     rows = [(i.strip()) for i in f.readlines()]
 
 def getAdjacentCoords(row, column):
-    coords = []
-    for r in range(row-1, row+2):
-        for c in range(column-1, column+2):
-            if r >= 0 and c >= 0 and r < len(rows) and c < len(rows[r]):
-                if (not (r == row and c == column)) and (rows[r][c] != '.'):
-                    coords.append((r, c))
-    if len(coords) >= 4:
-        return coords
+    if (rows[row][column] != '.'):
+        # Top left, top, top right, right,
+        TL = fanOut(row-1, column-1, -1, -1)
+        T = fanOut(row-1, column, -1, 0)
+        TR = fanOut(row-1, column+1, -1, 1)
+        R = fanOut(row, column+1, 0, 1)
+        # down right, down, down left, left
+        DR = fanOut(row+1, column+1, 1, 1)
+        D = fanOut(row+1, column, 1, 0)
+        DL = fanOut(row+1, column-1, 1, -1)
+        L = fanOut(row, column-1, 0, -1)
+        
+        possibleDirections = [TL, T, TR, R, DR, D, DL, L]
+        coords = [(direction[0], direction[1]) for direction in possibleDirections if direction]
+        # print('coords', coords)
+
+        if len(coords) >= 5:
+            return coords
     return False
 
 def getNumOccupied(coordinates):
@@ -22,6 +32,17 @@ def getNumOccupied(coordinates):
         if neighbour == '#':
             neighbourCount += 1
     return neighbourCount
+
+def fanOut(startingR, startingC, rMod, cMod):
+    r = startingR
+    c = startingC
+    while r in range(0, len(rows)) and c in range(0, len(rows[r])):
+        if (rows[r][c] != '.'):
+            return (r,c)
+        else:
+            r += rMod
+            c += cMod
+    return False
 
 rowsAfterFirst= []
 neighbours={}
@@ -39,7 +60,6 @@ for rowIndex, row in enumerate(rows):
 
 changesMade = True
 rows = rowsAfterFirst
-countIterations = 1
 
 while changesMade == True:
     changesMade = False
@@ -52,15 +72,12 @@ while changesMade == True:
             if seatValue == 'L' and numOccupied == 0:
                 changesMade = True
                 newSingleRow[seatCol] = '#'
-            elif seatValue == '#' and numOccupied >= 4:
+            elif seatValue == '#' and numOccupied >= 5:
                 changesMade = True
                 newSingleRow[seatCol] = 'L'
         newRows.append("".join(newSingleRow))
     rows = newRows
-    countIterations += 1
 
-# print(countIterations)
-# print(rows)
 occupiedCount = 0
 for r in rows:
     for x in r:
@@ -68,5 +85,3 @@ for r in rows:
             occupiedCount += 1
 
 print(occupiedCount)
-
-# --- Part Two ---
