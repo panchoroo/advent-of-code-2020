@@ -4,20 +4,23 @@ file = "input"
 with open("/Users/amieeverett/Sites/advent-of-code-2020/day12/"+file+".txt") as f:
     rows = [(i.strip()) for i in f.readlines()]
 
-
 dirs = ['N', 'E', 'S', 'W']
 currentDir = 1
-xVal = 0
-yVal = 0
+# These now refer to the waypoint
+xVal = 10
+yVal = 1
+xShipVal = 0
+yShipVal = 0
 
 for row in rows:
     instruction = row[:1]
     value = int(row[1:])
 
     if instruction == 'F':
-        instruction = dirs[currentDir]
+        xShipVal += value*xVal
+        yShipVal += value*yVal
 
-    if instruction == 'N':
+    elif instruction == 'N':
         yVal += value
     elif instruction == 'E':
         xVal += value
@@ -25,20 +28,25 @@ for row in rows:
         yVal -= value
     elif instruction == 'W':
         xVal -= value
-    elif instruction == 'R':
-        currentDir += int(value/90)
-        print(currentDir)
-    elif instruction == 'L':
-        currentDir -= int(value/90)
-
-    if currentDir not in range(0, 4):
-        if currentDir < 4:
-            currentDir += 4
+    else:
+        if value == 180:
+            xVal *= -1
+            yVal *= -1
+        elif row == 'R90' or row == 'L270':
+            # b, -a
+            newX = yVal
+            yVal = -xVal
+            xVal = newX
+        elif row == 'R270' or row == 'L90':
+            # -b, a
+            newY = xVal
+            xVal = -yVal
+            yVal = newY
         else:
-            currentDir -= 4
+            print('Eeerror', row)
 
-if xVal < 0:
-    xVal *= -1
-if yVal < 0:
-    yVal *= -1
-print('Manhattan distance = ', xVal + yVal)
+if xShipVal < 0:
+    xShipVal *= -1
+if yShipVal < 0:
+    yShipVal *= -1
+print('Manhattan distance of the ship = ', xShipVal + yShipVal)
